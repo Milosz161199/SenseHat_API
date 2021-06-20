@@ -6,7 +6,7 @@ from sense_emu import SenseHat
 sense = SenseHat()
 
 # data dictionary
-dict_data = {}
+dict_data = {'name':' ', 'value':0.0, 'unit':' ', 'sensor':' '}
 
 tempC = sense.temp
 dict_data['name'] = 'temperature'
