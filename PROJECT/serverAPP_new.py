@@ -107,103 +107,24 @@ def serverApp():
                 
                 cmd += cmd_tmp
                 
-                print(cmd)
 
-                if cmd == 'get_env_1':
-                    print("HERE")
-                    t = sense.get_temperature()
-                    p = sense.get_pressure()
-                    h = sense.get_humidity()
-                    data = ('[{"name":"temperature","value":' + str(t) + ',"unit":"C"},' +
-                            '{"name":"pressure","value":' + str(p) + ',"unit":"hPa"},' +
-                            '{"name":"tmpidity","value":' + str(h) + ',"unit":"%"}]')
-
+                dict_data['name'] = 'humidity'
+                dict_data['value'] = round(sense.get_humidity(), 2)
+                dict_data['unit'] = '[%]'
+                ict_data['sensor'] = 'humidity sensor'
+                tmp = dict_data
+                tmp_json = json.dumps(tmp)
+                    #print(tmp_json)
                     # save to file
-                    try:
-                        file = open("envdata.json", "w")
-                        file.write(data)
-                        print("Save..")
-                    except:
-                        print("Write Error - ENV")
-                    finally:
-                        file.close()
-                    break    
-                    
-                if cmd == 'get_env_2':
-                    t = sense.get_temperature()
-                    p = sense.get_pressure()
-                    h = sense.get_humidity()
-                    data = ('[{"name":"temperature","value":' + str(32.0 + (9.0 / 5.0) * t) + ',"unit":"F"},' +
-                            '{"name":"pressure","value":' + str(round(p * 0.7500616, 2)) + ',"unit":"mmHg"},' +
-                            '{"name":"humidity","value":' + str(round(h * 100.0, 2)) + ',"unit":"[-]"}]')
-
-                    # save to file
-                    try:
-                        file = open("envdata.json", "w")
-                        file.write(data)
-                    except:
-                        print("Write Error - ENV")
-                    finally:
-                        file.close()
-                    break
-
-                if cmd == 'get_rpy_deg':
-                    sense.set_imu_config(False, True, False)  # gyroscope enabled
-                    orientation_deg = sense.get_orientation_degrees()
-                    roll = orientation_deg['roll']
-                    pitch = orientation_deg['pitch']
-                    yaw = orientation_deg['yaw']
-
-                    data = ('[{"name":"roll","value":' + str(roll) + ',"unit":"deg"},' +
-                            '{"name":"pitch","value":' + str(pitch) + ',"unit":"deg"},' +
-                            '{"name":"yaw","value":' + str(yaw) + ',"unit":"deg"}]')
-
-                    # save to file
-                    try:
-                        file = open("rpydata.json", "w")
-                        file.write(data)
-                    except:
-                        print("Write Error - RPY")
-                    finally:
-                        file.close()
-                    break
-                if cmd == 'get_rpy_rad':
-                    sense.set_imu_config(False, True, False)  # gyroscope enabled
-                    orientation_rad = sense.get_orientation_radians()
-                    roll = orientation_rad['roll']
-                    pitch = orientation_rad['pitch']
-                    yaw = orientation_rad['yaw']
-
-                    data = ('[{"name":"roll","value":' + str(roll) + ',"unit":"rad"},' +
-                            '{"name":"pitch","value":' + str(pitch) + ',"unit":"rad"},' +
-                            '{"name":"yaw","value":' + str(yaw) + ',"unit":"rad"}]')
-
-                    # save to file
-                    try:
-                        file = open("rpydata.json", "w")
-                        file.write(data)
-                    except:
-                        print("Write Error - RPY")
-                    finally:
-                        file.close()
-                    break
-                if cmd == 'get_hum_p':
-                    dict_data['name'] = 'humidity'
-                    dict_data['value'] = round(sense.get_humidity(), 2)
-                    dict_data['unit'] = '[%]'
-                    dict_data['sensor'] = 'humidity sensor'
-                    tmp = dict_data
-                    tmp_json = json.dumps(tmp)
-                    print(tmp_json)
-                    # save to file
-                    try:
-                        file = open("OneByOne/TEST_file.json", "w")
-                        file.write(tmp_json)
-                    except:
-                        print("Write Error - RPY")
-                    finally:
-                        file.close()
-                    break
+                try:
+                    file = open("OneByOne/hum_p.json", "w")
+                    file.write(tmp_json)
+                except:
+                    print("Write Error - RPY")
+                finally:
+                    file.close()
+                
+                
                 if cmd == 'get_hum_':
                     dict_data['name'] = 'humidity'
                     dict_data['value'] = round(sense.get_humidity() / 100.0, 2)
@@ -220,22 +141,22 @@ def serverApp():
                     finally:
                         file.close()
                     break
-                if cmd == 'get_temp_C_1':
-                    dict_data['name'] = 'temperature'
-                    dict_data['value'] = round(sense.get_temperature(), 2)
-                    dict_data['unit'] = '[C]'
-                    dict_data['sensor'] = 'temperature sensor'
-                    tmp = dict_data
-                    tmp_json = json.dumps(tmp)
+
+                dict_data['name'] = 'temperature'
+                dict_data['value'] = round(sense.get_temperature(), 2)
+                dict_data['unit'] = '[C]'
+                dict_data['sensor'] = 'temperature sensor'
+                tmp = dict_data
+                tmp_json = json.dumps(tmp)
                     # save to file
-                    try:
-                        file = open("OneByOne/TEST_file.json", "w")
-                        file.write(tmp_json)
-                    except:
-                        print("Write Error - RPY")
-                    finally:
-                        file.close()
-                    break
+                try:
+                    file = open("OneByOne/temp_C_1.json", "w")
+                    file.write(tmp_json)
+                except:
+                    print("Write Error - RPY")
+                finally:
+                    file.close()
+                
                 if cmd == 'get_temp_C_2':
                     dict_data['name'] = 'temperature'
                     dict_data['value'] = round(sense.get_temperature_from_humidity(), 2)
@@ -316,7 +237,7 @@ def serverApp():
                     finally:
                         file.close()
                     break
-                if cmd == 'get_pres_hpa':
+                if cmd != 'get_pres_hpa':
                     dict_data['name'] = 'pressure'
                     dict_data['value'] = round(sense.get_pressure(), 2)
                     dict_data['unit'] = '[hPa]'
@@ -325,7 +246,7 @@ def serverApp():
                     tmp_json = json.dumps(tmp)
                     # save to file
                     try:
-                        file = open("OneByOne/TEST_file.json", "w")
+                        file = open("OneByOne/pres_hpa.json", "w")
                         file.write(tmp_json)
                     except:
                         print("Write Error - RPY")

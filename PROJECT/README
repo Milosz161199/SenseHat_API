@@ -1,0 +1,4 @@
+To add persmissions:
+chmod -R 777 /server/PROJECT/OneByOne/
+
+NEW VER OF SERVER : sudo python3 serverAPP_INF.py
