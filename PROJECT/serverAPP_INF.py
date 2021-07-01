@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-# File name   : serverAPP.py
-# Description : Android App
+# File name   : serverAPP_INF.py
+# Description : SERVER INF LOOP
 # Author      : Miłosz Plutowski
-# Date        : 2021/04/22
+# Date        : 2021/07/01
 
 
 import json
@@ -23,24 +23,26 @@ dict_data_joy_stick = {'counter_x': '', 'counter_y': '', 'counter_middle': ''}
 
 timeout = 0.1
 counter_middle = 0
-counter_x = 10
-counter_y = 20
+counter_x = 0
+counter_y = 0
+onStart = True
 
+'''
 HOST = ''
 PORT = 21567
 BUFSIZE = 4096
 
 # Create a TCP/IP socket
-#sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Bind the socket to the port
-#server_address = (HOST, PORT)
-#print('starting up on {} port {}'.format(*server_address))
-#sock.bind(server_address)
+server_address = (HOST, PORT)
+print('starting up on {} port {}'.format(*server_address))
+sock.bind(server_address)
 
 # Listen for incoming connections
-#sock.listen(5)
-
+sock.listen(5)
+'''
 
 def move(event):
     global counter_x, counter_y, counter_middle
@@ -58,17 +60,33 @@ def move(event):
 
 
 def joy_control():
+    global onStart, counter_x, counter_y, counter_middle
+    if onStart:
+        try:
+            file_joy = open('joy_stick_test_file.json', 'r')
+            if file_joy.readable():
+                tmp = file_joy.read()
+                tmp = json.loads(tmp)
+                #print(tmp)
+                counter_x = tmp['counter_x']
+                counter_y = tmp['counter_y']
+                counter_middle = tmp['counter_middle']
+        except:
+            print('Write Error - JOY')
+        finally:
+            file_joy.close()
+            onStart = False
+
     while True:
-        # print("Watek 1")
+        #print("Watek 1")       
         for event in sense.stick.get_events():
             if event.action in ('pressed'):
-
                 move(event)
                 dict_data_joy_stick['counter_x'] = counter_x
                 dict_data_joy_stick['counter_y'] = counter_y
                 dict_data_joy_stick['counter_middle'] = counter_middle
                 result_joy = json.dumps(dict_data_joy_stick)
-                print(result_joy)
+                #print(result_joy)
                 sleep(0.1)
 
                 try:
@@ -81,13 +99,12 @@ def joy_control():
                     file_joy.close()
 
 
-
 def serverApp():
     while True:
  
         dict_data['name'] = 'humidity'
         dict_data['value'] = round(sense.get_humidity(), 2)
-        dict_data['unit'] = '[%]'
+        dict_data['unit'] = '%'
         dict_data['sensor'] = 'humidity sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -103,7 +120,7 @@ def serverApp():
 
         dict_data['name'] = 'humidity'
         dict_data['value'] = round(sense.get_humidity() / 100.0, 2)
-        dict_data['unit'] = '[-]'
+        dict_data['unit'] = '-'
         dict_data['sensor'] = 'humidity sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -118,7 +135,7 @@ def serverApp():
 
         dict_data['name'] = 'temperature'
         dict_data['value'] = round(sense.get_temperature(), 2)
-        dict_data['unit'] = '[C]'
+        dict_data['unit'] = 'C'
         dict_data['sensor'] = 'temperature sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -133,7 +150,7 @@ def serverApp():
 
         dict_data['name'] = 'temperature'
         dict_data['value'] = round(sense.get_temperature_from_humidity(), 2)
-        dict_data['unit'] = '[C]'
+        dict_data['unit'] = 'C'
         dict_data['sensor'] = 'humidity sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -148,7 +165,7 @@ def serverApp():
 
         dict_data['name'] = 'temperature'
         dict_data['value'] = round(sense.get_temperature_from_pressure(), 2)
-        dict_data['unit'] = '[C]'
+        dict_data['unit'] = 'C'
         dict_data['sensor'] = 'pressure sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -163,7 +180,7 @@ def serverApp():
             
         dict_data['name'] = 'temperature'
         dict_data['value'] = round(32.0 + (9.0 / 5.0) * sense.get_temperature(), 2)
-        dict_data['unit'] = '[F]'
+        dict_data['unit'] = 'F'
         dict_data['sensor'] = 'temperature sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -178,7 +195,7 @@ def serverApp():
             
         dict_data['name'] = 'temperature'
         dict_data['value'] = round(32.0 + (9.0 / 5.0) * sense.get_temperature_from_humidity(), 2)
-        dict_data['unit'] = '[F]'
+        dict_data['unit'] = 'F'
         dict_data['sensor'] = 'humidity sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -193,7 +210,7 @@ def serverApp():
             
         dict_data['name'] = 'temperature'
         dict_data['value'] = round(32.0 + (9.0 / 5.0) * sense.get_temperature_from_pressure(), 2)
-        dict_data['unit'] = '[F]'
+        dict_data['unit'] = 'F'
         dict_data['sensor'] = 'pressure sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -208,7 +225,7 @@ def serverApp():
             
         dict_data['name'] = 'pressure'
         dict_data['value'] = round(sense.get_pressure(), 2)
-        dict_data['unit'] = '[hPa]'
+        dict_data['unit'] = 'hPa'
         dict_data['sensor'] = 'pressure sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -223,7 +240,7 @@ def serverApp():
             
         dict_data['name'] = 'pressure'
         dict_data['value'] = round(sense.get_pressure() * 0.7500616, 2)
-        dict_data['unit'] = '[mmHg]'
+        dict_data['unit'] = 'mmHg'
         dict_data['sensor'] = 'pressure sensor'
         tmp = dict_data
         tmp_json = json.dumps(tmp)
@@ -622,10 +639,61 @@ def serverApp():
             print("Write Error - RPY")
         finally:
             file.close()
+        
+        dict_data['name'] = 'counter_x'
+        dict_data['value'] = counter_x
+        dict_data['unit'] = '-'
+        dict_data['sensor'] = 'joy-stick'
+        r = dict_data
+        tmp_json = json.dumps(r)
+        #print(tmp_json)
+        # save to file
+        try:
+            file = open('OneByOne/counter_x.json', 'w')
+            if file.writable():
+                file.write(tmp_json)
+        except:
+            print('Write Error - JOY')
+        finally:
+            file.close()        
+            
+        dict_data['name'] = 'counter_y'
+        dict_data['value'] = counter_y
+        dict_data['unit'] = '-'
+        dict_data['sensor'] = 'joy-stick'
+        r = dict_data
+        tmp_json = json.dumps(r)
+        #print(tmp_json)
+        # save to file
+        try:
+            file = open('OneByOne/counter_y.json', 'w')
+            if file.writable():
+                file.write(tmp_json)
+        except:
+            print('Write Error - JOY')
+        finally:
+            file.close()
+            
+        dict_data['name'] = 'counter_middle'
+        dict_data['value'] = counter_middle
+        dict_data['unit'] = '-'
+        dict_data['sensor'] = 'joy-stick'
+        r = dict_data
+        tmp_json = json.dumps(r)
+        #print(tmp_json)
+        # save to file
+        try:
+            file = open('OneByOne/counter_middle.json', 'w')
+            if file.writable():
+                file.write(tmp_json)
+        except:
+            print('Write Error - JOY')
+        finally:
+            file.close()
         # sense.set_imu_config(True, False, False)  #  compass enabled
         # sense.set_imu_config(False, True, False)  #  gyroscope enabled
         # sense.set_imu_config(False, False, True)  #  accelerometer enabled
-        sleep(0.01)
+        sleep(0.05)
 
 
 class Thread_JoyStick(threading.Thread):
@@ -643,17 +711,9 @@ class Thread_Server(threading.Thread):
     def run(self):
         serverApp()
 
-    # t1=Thread(target=joy_control)
-
-
-# t2=Thread(target=serverApp)
 
 if __name__ == "__main__":
-    # serverApp()
-
-    Thread_JoyStick().start()
-    Thread_Server().start()
     ''' JOY-STICK  '''
-    # t1.start()
+    Thread_JoyStick().start()
     ''' SERVER  '''
-    # t2.start()
+    Thread_Server().start()
