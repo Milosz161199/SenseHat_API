@@ -1,1 +1,1 @@
-{"name": "accelerometer_x", "value": -0.0, "unit": "Gs", "sensor": "accelerometer"}
+{"name": "accelerometer_x", "value": 0.01, "unit": "Gs", "sensor": "accelerometer"}

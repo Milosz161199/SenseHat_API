@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import json
-from sense_emu import SenseHat
+from sense_hat import SenseHat
 from time import sleep
 
 sense = SenseHat()
