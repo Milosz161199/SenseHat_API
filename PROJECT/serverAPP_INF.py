@@ -693,7 +693,7 @@ def serverApp():
         # sense.set_imu_config(True, False, False)  #  compass enabled
         # sense.set_imu_config(False, True, False)  #  gyroscope enabled
         # sense.set_imu_config(False, False, True)  #  accelerometer enabled
-        sleep(0.1)
+        sleep(0.05)
 
 
 class Thread_JoyStick(threading.Thread):

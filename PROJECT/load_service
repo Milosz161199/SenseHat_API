@@ -1,0 +1,5 @@
+sudo cp onStart.service /etc/systemd/system/onStart.service
+sudo systemctl status onStart.service
+sudo systemctl start onStart.service
+sudo systemctl stop onStart.service  
+sudo systemctl enable onStart.service 
